@@ -177,7 +177,7 @@ function echo_do_not_edit() {
 
 # set_lock() sets lock file
 function set_lock() {
-	if ! echo "$MY_DATE_TIME" > "$MY_STATUS_LOCKFILE"; then
+	if ! echo $$ > "$MY_STATUS_LOCKFILE"; then
 		exit_with_failure "Can not create lock file '$MY_STATUS_LOCKFILE'"
 	fi
 }
@@ -189,7 +189,7 @@ function del_lock() {
 
 # check_lock() checks lock file and exit if the file exists
 function check_lock() {
-	if [ -f "$MY_STATUS_LOCKFILE" ]; then
+	if [ -e "$MY_STATUS_LOCKFILE" ] && kill -0 `cat ${MY_STATUS_LOCKFILE}`; then
 		exit_with_failure "$ME is already running. Please wait... In case of problems simply delete the file: '$MY_STATUS_LOCKFILE'"
 	fi
 }
